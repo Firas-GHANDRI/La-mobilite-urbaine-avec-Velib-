@@ -15,6 +15,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 url = "https://velib-metropole-opendata.smovengo.cloud/opendata/Velib_Metropole/station_status.json"
+
 response = requests.get(url)
 if response.status_code == 200:
     data=response.content
@@ -35,7 +36,32 @@ for i in range(0,len(data["data"]["stations"])):
 # Conversion en DataFrame    
 df1=pd.DataFrame(list(zip(station_id,bikes_available,docks_available)),columns=["station_id","vélos_disponibles","places_disponibles"])
 
-df2=pd.read_csv("localisation.csv")
+url2="https://velib-metropole-opendata.smovengo.cloud/opendata/Velib_Metropole/station_information.json"
+response2 = requests.get(url2)
+if response2.status_code == 200:
+    data2=response2.content
+    # D'abord, on décode les bytes en string
+    json_string2 =data2.decode('utf-8')
+
+    # Ensuite, on transforme le string en JSON
+    data2 = json.loads(json_string2)
+
+station_id_list=[]
+name_list=[]
+lat_list=[]
+lon_list=[]
+capacity_list=[]
+for i in range(0,len(data2["data"]["stations"])):
+    station_id_list.append(data2["data"]["stations"][i]["station_id"])
+    name_list.append(data2["data"]["stations"][i]["name"])
+    lat_list.append(data2["data"]["stations"][i]["lat"])
+    lon_list.append(data2["data"]["stations"][i]["lon"])
+    capacity_list.append(data2["data"]["stations"][i]["capacity"])
+# Conversion en DataFrame    
+df2=pd.DataFrame(list(zip(station_id_list,name_list,lat_list,lon_list,capacity_list)),columns=["station_id","name","lat","lon","capacity"])
+
+
+
 df=pd.merge(df1,df2,on='station_id')
 with st.sidebar:choose = option_menu("Menu", ["trouves la station la plus proche", "Choisis ta station"])
 
