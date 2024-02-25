@@ -1,0 +1,11 @@
+fastapi 
+uvicorn[standard]
+python-multipart
+pydantic 
+pandas 
+numpy
+gunicorn
+pillow #from PIL import Image
+streamlit
+streamlit_option_menu
+plotly.express
