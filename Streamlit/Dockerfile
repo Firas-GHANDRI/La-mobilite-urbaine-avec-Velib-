@@ -13,4 +13,4 @@ RUN pip install -r /dependencies/requirements.txt
 COPY . /home/app
 
 
-CMD gunicorn api:app  --bind 0.0.0.0:$PORT --worker-class uvicorn.workers.UvicornWorker 
+CMD gunicorn app:app  --bind 0.0.0.0:$PORT --worker-class uvicorn.workers.UvicornWorker 
